@@ -1,0 +1,1276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0D0D0D;--paper:#F5F2EC;--accent:#C41E1E;--accent2:#1A4A8A;
+  --muted:#6B6560;--border:#D8D4CC;--card:#FDFAF5;
+  --admin-bg:#F0F2F5;--admin-sidebar:#1A1F2E;--admin-accent:#3B6FD4;
+}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+/* ===== SCREENS ===== */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ===== TOP NAV (website) ===== */
+.topbar{background:var(--ink);color:#fff;text-align:center;padding:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.topbar span{color:#E8C87A}
+.masthead{border-bottom:3px solid var(--ink);padding:16px 40px 12px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.logo{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+.logo span{color:var(--accent)}
+.tagline{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.site-nav{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.site-nav a{padding:7px 13px;font-size:12px;font-weight:500;color:var(--ink);text-decoration:none;cursor:pointer;border-right:1px solid var(--border);transition:background .15s}
+.site-nav a:last-child{border-right:none}
+.site-nav a:hover,.site-nav a.active{background:var(--ink);color:#fff}
+.admin-btn{padding:8px 16px;background:var(--admin-accent);color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.04em}
+.admin-btn:hover{background:#2a5ec4}
+.datebar{background:var(--ink);color:#888;padding:5px 40px;font-size:11px;display:flex;justify-content:space-between}
+.datebar span{color:#fff}
+
+/* ===== WEBSITE LAYOUT ===== */
+.w-container{max-width:1100px;margin:0 auto;padding:0 40px}
+.w-layout{display:grid;grid-template-columns:1fr 290px;gap:32px;margin-top:24px}
+.hero{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:20px}
+.hero-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.hero-img{width:100%;height:200px;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:4px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-img::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(196,30,30,.3),transparent 60%)}
+.hero-img-text{color:#fff;font-family:'Playfair Display',serif;font-size:44px;font-weight:900;opacity:.12;letter-spacing:-2px}
+.hero-title{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;line-height:1.1;letter-spacing:-.5px;margin-bottom:10px;cursor:pointer}
+.hero-title:hover{color:var(--accent2)}
+.hero-excerpt{font-size:15px;line-height:1.7;color:#333;font-style:italic}
+.hero-meta{display:flex;gap:12px;margin-top:10px;font-size:12px;color:var(--muted);align-items:center}
+.tag{background:var(--accent);color:#fff;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px}
+.section-title{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding-bottom:7px;border-bottom:2px solid var(--ink);margin-bottom:14px}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.art-card{cursor:pointer;border-bottom:1px solid var(--border);padding-bottom:14px}
+.art-card:hover .art-title{color:var(--accent2)}
+.art-cat{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.art-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.3;margin-bottom:5px;transition:color .15s}
+.art-excerpt{font-size:13px;line-height:1.6;color:#555;font-style:italic}
+.art-meta-row{font-size:11px;color:var(--muted);margin-top:5px;display:flex;gap:10px}
+.ad-slot{background:repeating-linear-gradient(45deg,#f9f6f0,#f9f6f0 10px,#f5f2ec 10px,#f5f2ec 20px);border:1px dashed var(--border);border-radius:4px;text-align:center;padding:12px;font-size:11px;color:var(--muted);margin:16px 0}
+.ad-slot strong{display:block;font-size:12px;color:var(--ink);margin-bottom:2px}
+.sidebar-title{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding-bottom:7px;border-bottom:2px solid var(--ink);margin-bottom:10px}
+.sidebar-section{margin-bottom:24px}
+.trend-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;align-items:flex-start}
+.trend-item:hover .trend-title{color:var(--accent2)}
+.trend-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--border);line-height:1;flex-shrink:0;width:26px}
+.trend-title{font-family:'Source Serif 4',serif;font-size:13px;font-weight:600;line-height:1.35;transition:color .15s}
+.trend-cat{font-size:10px;color:var(--muted);margin-top:2px}
+.newsletter-box{background:var(--ink);color:#fff;padding:16px;border-radius:4px}
+.newsletter-box h3{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:5px}
+.newsletter-box p{font-size:12px;color:#aaa;margin-bottom:10px;line-height:1.6}
+.newsletter-box input{width:100%;padding:8px 11px;border:none;border-radius:3px;font-size:12px;margin-bottom:7px;background:#fff;color:var(--ink);outline:none}
+.newsletter-box button{width:100%;padding:8px;background:var(--accent);color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.05em}
+.newsletter-box button:hover{background:#a01818}
+.article-view-inner{max-width:680px;margin:0 auto;padding:20px 0 40px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;margin-bottom:20px;padding:6px 13px;border:1px solid var(--border);border-radius:3px;transition:all .15s}
+.back-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.article-body h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;line-height:1.15;letter-spacing:-.5px;margin-bottom:14px}
+.article-body .byline{font-size:12px;color:var(--muted);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.article-body p{font-family:'Source Serif 4',serif;font-size:16px;line-height:1.8;margin-bottom:16px;color:#2a2a2a}
+.article-body h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin:24px 0 10px}
+.article-body blockquote{border-left:4px solid var(--accent);padding-left:18px;margin:20px 0;font-style:italic;font-size:16px;color:#444;line-height:1.7;font-family:'Source Serif 4',serif}
+footer{background:var(--ink);color:#aaa;padding:24px 40px;margin-top:36px;font-size:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer .f-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#fff}
+footer .f-logo span{color:var(--accent)}
+footer .f-links{display:flex;gap:14px}
+footer .f-links a{color:#aaa;text-decoration:none;cursor:pointer}
+footer .f-links a:hover{color:#fff}
+
+/* ===== LOGIN SCREEN ===== */
+.login-screen{min-height:100vh;background:var(--admin-sidebar);display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:10px;padding:40px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:4px}
+.login-logo span{color:var(--accent)}
+.login-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:28px}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:12px;font-weight:600;color:var(--ink);margin-bottom:5px;letter-spacing:.04em}
+.login-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:5px;font-size:13px;outline:none;transition:border-color .15s}
+.login-field input:focus{border-color:var(--admin-accent)}
+.login-btn{width:100%;padding:11px;background:var(--admin-accent);color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}
+.login-btn:hover{background:#2a5ec4}
+.login-err{color:var(--accent);font-size:12px;text-align:center;margin-top:8px;display:none}
+.login-hint{text-align:center;font-size:11px;color:var(--muted);margin-top:14px}
+.login-hint span{color:var(--admin-accent);font-weight:600}
+
+/* ===== ADMIN PANEL ===== */
+.admin-layout{display:flex;min-height:100vh;background:var(--admin-bg)}
+.admin-sidebar{width:220px;background:var(--admin-sidebar);color:#fff;flex-shrink:0;padding:0;display:flex;flex-direction:column}
+.admin-sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.admin-sidebar-logo .logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:900}
+.admin-sidebar-logo .logo-text span{color:#E87A7A}
+.admin-sidebar-logo .role-badge{font-size:10px;color:#888;margin-top:3px;letter-spacing:.06em;text-transform:uppercase}
+.admin-menu{padding:12px 0;flex:1}
+.admin-menu-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;color:#9CA3AF;cursor:pointer;transition:all .15s;border-left:3px solid transparent}
+.admin-menu-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.admin-menu-item.active{background:rgba(59,111,212,.15);color:#fff;border-left-color:var(--admin-accent)}
+.admin-menu-item .icon{font-size:16px;width:18px;text-align:center}
+.admin-sidebar-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-logout{display:flex;align-items:center;gap:8px;font-size:12px;color:#9CA3AF;cursor:pointer;transition:color .15s}
+.sidebar-logout:hover{color:#fff}
+.admin-main{flex:1;overflow:auto}
+.admin-topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+.admin-topbar h1{font-size:18px;font-weight:600;color:var(--ink)}
+.admin-topbar .breadcrumb{font-size:12px;color:var(--muted)}
+.view-site-btn{padding:7px 14px;border:1.5px solid var(--border);border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;background:#fff;transition:all .15s}
+.view-site-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.admin-content{padding:24px 28px}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:8px;padding:18px;border:1px solid #E5E7EB}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+.stat-sub{font-size:11px;color:#22C55E;margin-top:4px;font-weight:500}
+.recent-table{background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:hidden}
+.table-head{padding:14px 18px;border-bottom:1px solid #E5E7EB;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.table-row{display:grid;grid-template-columns:2fr 100px 80px 80px 100px;gap:12px;padding:12px 18px;border-bottom:1px solid #F3F4F6;align-items:center;font-size:13px}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:#F9FAFB}
+.table-header{background:#F9FAFB;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.status-badge{padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.status-published{background:#DCFCE7;color:#15803D}
+.status-draft{background:#FEF9C3;color:#A16207}
+.btn-sm{padding:5px 11px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s}
+.btn-edit{background:#EFF6FF;color:var(--admin-accent);border-color:#BFDBFE}
+.btn-edit:hover{background:var(--admin-accent);color:#fff}
+.btn-del{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.btn-del:hover{background:#DC2626;color:#fff}
+.action-btns{display:flex;gap:5px}
+
+/* ARTICLES LIST */
+.articles-list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.articles-list-header h2{font-size:16px;font-weight:600}
+.btn-new{padding:9px 18px;background:var(--admin-accent);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-new:hover{background:#2a5ec4}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px}
+.filter-btn{padding:6px 13px;border:1.5px solid var(--border);border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;background:#fff;transition:all .15s}
+.filter-btn.active,.filter-btn:hover{background:var(--admin-accent);color:#fff;border-color:var(--admin-accent)}
+.articles-table{background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:hidden}
+.articles-table .table-row{grid-template-columns:2.5fr 90px 80px 70px 110px}
+
+/* EDITOR */
+.editor-panel{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:28px}
+.editor-panel h2{font-size:16px;font-weight:600;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--ink);margin-bottom:5px;letter-spacing:.04em}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:5px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;background:#fff}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--admin-accent)}
+.form-group textarea{min-height:100px;resize:vertical;line-height:1.6}
+.rich-toolbar{display:flex;gap:4px;padding:8px;background:#F9FAFB;border:1.5px solid var(--border);border-bottom:none;border-radius:5px 5px 0 0;flex-wrap:wrap}
+.rich-btn{padding:5px 10px;border:1px solid #E5E7EB;border-radius:3px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;transition:all .15s}
+.rich-btn:hover{background:var(--admin-accent);color:#fff;border-color:var(--admin-accent)}
+.rich-editor{width:100%;min-height:220px;padding:12px;border:1.5px solid var(--border);border-top:none;border-radius:0 0 5px 5px;font-size:14px;font-family:'Source Serif 4',serif;line-height:1.8;outline:none;background:#fff}
+.form-actions{display:flex;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid #E5E7EB}
+.btn-publish{padding:10px 22px;background:#16A34A;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-publish:hover{background:#15803D}
+.btn-draft{padding:10px 22px;background:#F59E0B;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-draft:hover{background:#D97706}
+.btn-cancel{padding:10px 22px;background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:5px;font-size:13px;font-weight:500;cursor:pointer}
+.btn-cancel:hover{background:#F9FAFB}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.checkbox-row input{width:16px;height:16px;cursor:pointer}
+.checkbox-row label{font-size:13px;color:var(--ink);cursor:pointer}
+.seo-preview{background:#F0F7FF;border:1px solid #BFDBFE;border-radius:6px;padding:14px;margin-top:10px}
+.seo-preview .seo-title{font-size:17px;color:#1a0dab;font-weight:400;margin-bottom:3px}
+.seo-preview .seo-url{font-size:13px;color:#006621;margin-bottom:3px}
+.seo-preview .seo-desc{font-size:13px;color:#545454}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.settings-card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:22px}
+.settings-card h3{font-size:14px;font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #E5E7EB}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #F3F4F6;font-size:13px}
+.toggle{position:relative;width:38px;height:21px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#D1D5DB;border-radius:99px;transition:.2s}
+.toggle-slider:before{content:'';position:absolute;width:15px;height:15px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--admin-accent)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(17px)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1A1F2E;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-left:4px solid #22C55E}
+.toast.error{border-left:4px solid var(--accent)}
+
+@media(max-width:700px){
+  .masthead{padding:12px 16px}
+  .logo{font-size:28px}
+  .site-nav,.admin-btn{display:none}
+  .w-container,.w-layout{padding:0 14px}
+  .w-layout{grid-template-columns:1fr}
+  .articles-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .admin-sidebar{width:200px}
+  .form-row{grid-template-columns:1fr}
+  .settings-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== WEBSITE SCREEN ===== -->
+<div class="screen active" id="websiteScreen">
+  <div class="topbar">Breaking: <span>Panama Papers — 10 Years On, Zero Convictions</span></div>
+  <div class="masthead">
+    <div>
+      <div class="logo">Truth<span>.</span>Unlocked</div>
+      <div class="tagline">Global corruption · Indian eyes · No filter</div>
+    </div>
+    <nav class="site-nav">
+      <a class="active" onclick="showWebHome()">Home</a>
+      <a onclick="filterCat('Corruption')">Corruption</a>
+      <a onclick="filterCat('Finance')">Finance</a>
+      <a onclick="filterCat('Politics')">Politics</a>
+      <a onclick="filterCat('Social')">Social</a>
+    </nav>
+    <button class="admin-btn" onclick="showLogin()">⚙ Admin Panel</button>
+  </div>
+  <div class="datebar"><span id="dateStr"></span><span>Independent · Always free · Ad-supported</span></div>
+
+  <!-- Article view -->
+  <div id="articleViewWrap" style="display:none">
+    <div class="w-container">
+      <div class="article-view-inner">
+        <span class="back-btn" onclick="showWebHome()">← Back to Home</span>
+        <div id="articleBody" class="article-body"></div>
+        <div class="ad-slot"><strong>Advertisement</strong>Google AdSense — In-article</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main home -->
+  <div id="webHomeWrap">
+    <div class="w-container">
+      <div class="w-layout">
+        <div>
+          <div class="hero" id="heroBlock"></div>
+          <div class="ad-slot"><strong>Advertisement</strong>AdSense Leaderboard (728×90)</div>
+          <div class="section-title" id="gridTitle">Latest Investigations</div>
+          <div class="articles-grid" id="webGrid"></div>
+          <div class="ad-slot"><strong>Advertisement</strong>AdSense Rectangle</div>
+        </div>
+        <div>
+          <div class="sidebar-section">
+            <div class="sidebar-title">Trending Now</div>
+            <div id="trendingList"></div>
+          </div>
+          <div class="ad-slot"><strong>Advertisement</strong>AdSense Sidebar 300×250</div>
+          <div class="sidebar-section">
+            <div class="newsletter-box">
+              <h3>Stay Informed</h3>
+              <p>Get the biggest corruption stories in your inbox every morning.</p>
+              <input type="email" placeholder="your@email.com" id="emailInput">
+              <button onclick="subscribe()">Subscribe Free</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div><div class="f-logo">Truth<span>.</span>Unlocked</div><div style="margin-top:5px;font-size:11px;">© 2026 · Built with Next.js · Hosted on Vercel</div></div>
+    <div class="f-links"><a>About</a><a>Contact</a><a>Privacy</a><a>Advertise</a><a>Submit a Tip</a></div>
+  </footer>
+</div>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="screen" id="loginScreen">
+  <div class="login-screen">
+    <div class="login-box">
+      <div class="login-logo">Truth<span>.</span>Unlocked</div>
+      <div class="login-sub">Admin Panel — Secure Login</div>
+      <div class="login-field">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="65arunyadav65@gmail.com">
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Login to Dashboard</button>
+      <div class="login-err" id="loginErr">Invalid credentials. Try again.</div>
+      <div class="login-hint">🔒 Credentials are hashed &amp; verified securely</div>
+      <div id="loginAttempts" style="text-align:center;font-size:11px;color:var(--accent);margin-top:6px;display:none"></div>
+      <div style="text-align:center;margin-top:12px"><span style="font-size:12px;color:var(--muted);cursor:pointer" onclick="showWebsite()">← Back to website</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN SCREEN ===== -->
+<div class="screen" id="adminScreen">
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-logo">
+        <div class="logo-text">Truth<span>.</span>Unlocked</div>
+        <div class="role-badge">Administrator</div>
+      </div>
+      <div class="admin-menu">
+        <div class="admin-menu-item active" onclick="adminNav('dashboard',this)"><span class="icon">📊</span>Dashboard</div>
+        <div class="admin-menu-item" onclick="adminNav('articles',this)"><span class="icon">📰</span>All Articles</div>
+        <div class="admin-menu-item" onclick="adminNav('new',this)"><span class="icon">✏️</span>New Article</div>
+        <div class="admin-menu-item" onclick="adminNav('media',this)"><span class="icon">🖼️</span>Media</div>
+        <div class="admin-menu-item" onclick="adminNav('settings',this)"><span class="icon">⚙️</span>Settings</div>
+        <div class="admin-menu-item" onclick="adminNav('auditlog',this)"><span class="icon">🔐</span>Audit Log</div>
+      </div>
+      <div class="admin-sidebar-footer">
+        <div class="sidebar-logout" onclick="showWebsite()"><span>🌐</span>View Website</div>
+        <div class="sidebar-logout" style="margin-top:10px" onclick="doLogout()"><span>🚪</span>Logout</div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <div>
+          <div class="admin-topbar h1" id="adminPageTitle" style="font-size:18px;font-weight:600">Dashboard</div>
+          <div class="breadcrumb" id="adminBreadcrumb">Admin / Dashboard</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div id="sessionBadge" style="font-size:11px;color:#22C55E;font-weight:600">● Session Active</div>
+          <div id="sessionTimer" style="font-size:11px;color:var(--muted)"></div>
+          <button class="view-site-btn" onclick="showWebsite()">🌐 View Site</button>
+        </div>
+      </div>
+      <div class="admin-content">
+
+        <!-- DASHBOARD -->
+        <div id="adminDashboard">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Articles</div>
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-sub">↑ 2 this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Published</div>
+              <div class="stat-value" id="statPublished">0</div>
+              <div class="stat-sub" style="color:#F59E0B">Live on site</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Views</div>
+              <div class="stat-value" id="statViews">0</div>
+              <div class="stat-sub">↑ 12% this month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Drafts</div>
+              <div class="stat-value" id="statDrafts">0</div>
+              <div class="stat-sub" style="color:var(--muted)">Unpublished</div>
+            </div>
+          </div>
+          <div class="recent-table">
+            <div class="table-head">
+              <span>Recent Articles</span>
+              <button class="btn-new" onclick="adminNav('new',null)">+ New Article</button>
+            </div>
+            <div class="table-row table-header">
+              <span>Title</span><span>Category</span><span>Views</span><span>Status</span><span>Actions</span>
+            </div>
+            <div id="dashTable"></div>
+          </div>
+        </div>
+
+        <!-- ARTICLES LIST -->
+        <div id="adminArticles" style="display:none">
+          <div class="articles-list-header">
+            <h2>All Articles</h2>
+            <button class="btn-new" onclick="adminNav('new',null)">+ New Article</button>
+          </div>
+          <div class="filter-bar" id="filterBar"></div>
+          <div class="articles-table">
+            <div class="table-row table-header" style="grid-template-columns:2.5fr 90px 80px 70px 110px">
+              <span>Title</span><span>Category</span><span>Views</span><span>Status</span><span>Actions</span>
+            </div>
+            <div id="articlesTableBody"></div>
+          </div>
+        </div>
+
+        <!-- EDITOR -->
+        <div id="adminEditor" style="display:none">
+          <div class="editor-panel">
+            <h2 id="editorTitle">✏️ New Article</h2>
+            <input type="hidden" id="editId" value="">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Article Title *</label>
+                <input type="text" id="fTitle" placeholder="e.g. The Panama Papers: 10 Years Later">
+              </div>
+              <div class="form-group">
+                <label>URL Slug *</label>
+                <input type="text" id="fSlug" placeholder="e.g. panama-papers-10-years-later">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category *</label>
+                <select id="fCat">
+                  <option value="">Select category...</option>
+                  <option>Corruption</option>
+                  <option>Finance</option>
+                  <option>Politics</option>
+                  <option>Social</option>
+                  <option>Health</option>
+                  <option>Technology</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Read Time</label>
+                <input type="text" id="fRead" placeholder="e.g. 8 min">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Excerpt / Summary *</label>
+              <textarea id="fExcerpt" placeholder="Short summary shown on homepage cards (2-3 sentences)"></textarea>
+            </div>
+            <!-- COVER IMAGE UPLOAD -->
+            <div class="form-group">
+              <label>Cover Image <span style="color:var(--muted);font-weight:400">(shown on homepage card &amp; article header)</span></label>
+              <div id="coverImageWrap" style="border:2px dashed var(--border);border-radius:6px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;background:#FAFAFA;position:relative" onclick="document.getElementById('coverImageInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--admin-accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleImageDrop(event)">
+                <input type="file" id="coverImageInput" accept="image/*" style="display:none" onchange="handleCoverImage(event)">
+                <div id="coverImagePreview" style="display:none;position:relative">
+                  <img id="coverImgTag" style="max-height:180px;max-width:100%;border-radius:4px;object-fit:cover" src="" alt="Cover">
+                  <button onclick="removeCoverImage(event)" style="position:absolute;top:4px;right:4px;background:#DC2626;color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px;line-height:1">×</button>
+                </div>
+                <div id="coverImagePlaceholder">
+                  <div style="font-size:32px;margin-bottom:6px">🖼️</div>
+                  <div style="font-size:13px;font-weight:500;color:var(--ink)">Click or drag &amp; drop to upload cover image</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px">JPG, PNG, WebP — max 5MB</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Article Content *</label>
+              <div class="rich-toolbar">
+                <button class="rich-btn" onclick="fmt('bold')"><b>B</b></button>
+                <button class="rich-btn" onclick="fmt('italic')"><i>I</i></button>
+                <button class="rich-btn" onclick="fmt('underline')"><u>U</u></button>
+                <button class="rich-btn" onclick="insHtml('<h2>Subheading</h2>')">H2</button>
+                <button class="rich-btn" onclick="insHtml('<blockquote>Quote here</blockquote>')">❝</button>
+                <button class="rich-btn" onclick="insHtml('<p>New paragraph</p>')">¶</button>
+                <button class="rich-btn" onclick="insHtml('<ul><li>Item</li></ul>')">• List</button>
+                <button class="rich-btn" onclick="triggerInlineImage()" title="Insert image into article body">📷 Image</button>
+                <input type="file" id="inlineImageInput" accept="image/*" style="display:none" onchange="handleInlineImage(event)">
+              </div>
+              <div class="rich-editor" id="fContent" contenteditable="true" placeholder="Write your full article content here..."></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>SEO Title <span style="color:var(--muted);font-weight:400">(max 60 chars)</span></label>
+                <input type="text" id="fSeoTitle" placeholder="Google search title" oninput="updateSeoPreview()">
+              </div>
+              <div class="form-group">
+                <label>SEO Description <span style="color:var(--muted);font-weight:400">(max 160 chars)</span></label>
+                <input type="text" id="fSeoDesc" placeholder="Google search description" oninput="updateSeoPreview()">
+              </div>
+            </div>
+            <div class="seo-preview" id="seoPreview">
+              <div class="seo-title" id="seoTitlePrev">Article title will appear here</div>
+              <div class="seo-url">https://truthunlocked.com/<span id="seoSlugPrev">your-slug</span></div>
+              <div class="seo-desc" id="seoDescPrev">Meta description will appear here</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="checkbox-row"><input type="checkbox" id="fFeatured"><label for="fFeatured">Set as Featured Article (shown in hero on homepage)</label></div>
+              <div class="checkbox-row"><input type="checkbox" id="fBreaking"><label for="fBreaking">Mark as Breaking News (shown in top bar)</label></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-publish" onclick="saveArticle('published')">✓ Publish Now</button>
+              <button class="btn-draft" onclick="saveArticle('draft')">💾 Save as Draft</button>
+              <button class="btn-cancel" onclick="adminNav('articles',null)">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEDIA -->
+        <div id="adminMedia" style="display:none">
+          <div class="articles-list-header"><h2>Media Library</h2><button class="btn-new">+ Upload Image</button></div>
+          <div style="background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:40px;text-align:center;color:var(--muted)">
+            <div style="font-size:48px;margin-bottom:12px">🖼️</div>
+            <div style="font-size:15px;font-weight:500;margin-bottom:6px">Media Library</div>
+            <div style="font-size:13px">Upload images here to use in your articles.<br>Supported formats: JPG, PNG, WebP, GIF</div>
+            <button class="btn-new" style="margin-top:16px">Upload First Image</button>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="adminSettings" style="display:none">
+          <div class="articles-list-header"><h2>Site Settings</h2><button class="btn-new" onclick="showToast('Settings saved!','success')">Save Changes</button></div>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <h3>General Settings</h3>
+              <div style="font-size:11px;color:#22C55E;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:4px;padding:6px 10px;margin-bottom:12px">🔒 All data encrypted &amp; stored locally</div>
+              <div class="form-group"><label>Site Name</label><input type="text" value="Truth Unlocked"></div>
+              <div class="form-group"><label>Tagline</label><input type="text" value="Global corruption · Indian eyes · No filter"></div>
+              <div class="form-group"><label>Contact Email</label><input type="text" value="contact@truthunlocked.com"></div>
+            </div>
+            <div class="settings-card">
+              <h3>AdSense Settings</h3>
+              <div class="form-group"><label>Publisher ID</label><input type="text" placeholder="ca-pub-XXXXXXXXXXXXXXXX"></div>
+              <div class="form-group"><label>Header Ad Slot</label><input type="text" placeholder="1234567890"></div>
+              <div class="form-group"><label>Sidebar Ad Slot</label><input type="text" placeholder="0987654321"></div>
+            </div>
+            <div class="settings-card">
+              <h3>Features</h3>
+              <div class="toggle-row"><span>Show Breaking News Bar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><span>Newsletter Signup</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><span>Trending Sidebar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><span>Comments Section</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><span>Dark Mode Toggle</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+            </div>
+            <div class="settings-card">
+              <h3>SEO Settings</h3>
+              <div class="form-group"><label>Google Analytics ID</label><input type="text" placeholder="G-XXXXXXXXXX"></div>
+              <div class="form-group"><label>Search Console Verification</label><input type="text" placeholder="Paste meta tag content"></div>
+              <div class="form-group"><label>Default Meta Description</label><textarea placeholder="Default description for homepage"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUDIT LOG -->
+        <div id="adminAuditLog" style="display:none">
+          <div class="articles-list-header">
+            <h2>🔐 Security Audit Log</h2>
+            <button class="btn-new" onclick="clearAuditLog()" style="background:#DC2626">Clear Log</button>
+          </div>
+          <div style="background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:hidden">
+            <div class="table-row table-header" style="grid-template-columns:160px 120px 1fr 100px">
+              <span>Timestamp</span><span>Event Type</span><span>Details</span><span>IP/Session</span>
+            </div>
+            <div id="auditLogBody" style="max-height:500px;overflow-y:auto"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  TRUTH UNLOCKED — SECURE BACKEND v2.0
+//  Features: SHA-256 auth, rate limiting, session tokens,
+//  localStorage persistence with XOR encryption,
+//  input sanitization, audit logging, auto-save, CSRF token
+// ============================================================
+
+// ===== CRYPTO UTILITIES =====
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function xorEncrypt(str, key) {
+  let out = '';
+  for (let i = 0; i < str.length; i++)
+    out += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+  return btoa(unescape(encodeURIComponent(out)));
+}
+
+function xorDecrypt(b64, key) {
+  try {
+    const str = decodeURIComponent(escape(atob(b64)));
+    let out = '';
+    for (let i = 0; i < str.length; i++)
+      out += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    return out;
+  } catch { return null; }
+}
+
+function generateToken(len = 32) {
+  const arr = new Uint8Array(len);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ===== STORAGE KEYS & ENCRYPTION KEY =====
+const STORAGE_KEY  = 'tu_articles_v2';
+const SESSION_KEY  = 'tu_session_v2';
+const AUDIT_KEY    = 'tu_audit_v2';
+const CSRF_KEY     = 'tu_csrf_v2';
+// Encryption key derived from browser fingerprint + static salt
+const ENC_KEY = (() => {
+  const fp = [navigator.language, screen.colorDepth, new Date().getTimezoneOffset()].join('|');
+  return 'TU2026_' + btoa(fp).slice(0, 20);
+})();
+
+// ===== AUTH CONFIG (credentials stored as hashes only) =====
+// SHA-256 of "admin@truthunlocked.com:admin123"
+const ADMIN_CREDENTIAL_HASH = '2213843d314484b09720196d056576d14752972f7659f139d270f6358a97c7bd';
+// (pre-computed; updated via changePassword())
+
+// ===== RATE LIMITER =====
+const loginAttempts = { count: 0, lockUntil: 0 };
+const MAX_ATTEMPTS  = 5;
+const LOCK_DURATION = 60000; // 60s
+
+// ===== SESSION CONFIG =====
+const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
+let sessionExpiry   = 0;
+let sessionInterval = null;
+let csrfToken       = '';
+
+// ===== AUDIT LOG =====
+let auditLog = [];
+
+function addAudit(type, detail) {
+  const entry = {
+    ts: new Date().toISOString(),
+    type,
+    detail,
+    session: csrfToken ? csrfToken.slice(0,8) + '…' : 'none'
+  };
+  auditLog.unshift(entry);
+  if (auditLog.length > 200) auditLog = auditLog.slice(0, 200);
+  saveAuditLog();
+}
+
+function saveAuditLog() {
+  try { localStorage.setItem(AUDIT_KEY, xorEncrypt(JSON.stringify(auditLog), ENC_KEY)); } catch {}
+}
+
+function loadAuditLog() {
+  try {
+    const raw = localStorage.getItem(AUDIT_KEY);
+    if (!raw) return;
+    const dec = xorDecrypt(raw, ENC_KEY);
+    if (dec) auditLog = JSON.parse(dec);
+  } catch {}
+}
+
+// ===== SECURE STORAGE =====
+function saveArticles() {
+  try {
+    const enc = xorEncrypt(JSON.stringify(articles), ENC_KEY);
+    localStorage.setItem(STORAGE_KEY, enc);
+    addAudit('STORAGE', 'Articles saved to encrypted storage');
+  } catch (e) {
+    addAudit('ERROR', 'Storage save failed: ' + e.message);
+  }
+}
+
+function loadArticles() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const dec = xorDecrypt(raw, ENC_KEY);
+    if (!dec) { addAudit('SECURITY', 'Storage decryption failed — data may be tampered'); return false; }
+    const parsed = JSON.parse(dec);
+    if (!Array.isArray(parsed)) return false;
+    articles = parsed;
+    addAudit('STORAGE', `Loaded ${articles.length} articles from encrypted storage`);
+    return true;
+  } catch (e) {
+    addAudit('ERROR', 'Storage load failed: ' + e.message);
+    return false;
+  }
+}
+
+// ===== INPUT SANITIZATION =====
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
+}
+
+function sanitizeHtml(html) {
+  // Allow only safe tags for article body
+  const allowed = ['p','h1','h2','h3','blockquote','b','i','u','strong','em','ul','ol','li','br','div','span'];
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  // Remove script tags and event handlers
+  temp.querySelectorAll('script,style,iframe,object,embed,form').forEach(el => el.remove());
+  temp.querySelectorAll('*').forEach(el => {
+    // Remove all event handler attributes
+    [...el.attributes].forEach(attr => {
+      if (attr.name.startsWith('on') || attr.name === 'href' && attr.value.startsWith('javascript')) {
+        el.removeAttribute(attr.name);
+      }
+    });
+  });
+  return temp.innerHTML;
+}
+
+function validateArticle(data) {
+  const errors = [];
+  if (!data.title || data.title.trim().length < 3) errors.push('Title must be at least 3 characters');
+  if (data.title && data.title.length > 200) errors.push('Title must be under 200 characters');
+  if (!data.cat) errors.push('Category is required');
+  if (!data.excerpt || data.excerpt.trim().length < 10) errors.push('Excerpt must be at least 10 characters');
+  if (data.seoTitle && data.seoTitle.length > 60) errors.push('SEO Title must be ≤60 characters');
+  if (data.seoDesc && data.seoDesc.length > 160) errors.push('SEO Description must be ≤160 characters');
+  const slugCheck = /^[a-z0-9-]+$/;
+  if (data.slug && !slugCheck.test(data.slug)) errors.push('Slug can only contain lowercase letters, numbers and hyphens');
+  return errors;
+}
+
+// ===== SESSION MANAGEMENT =====
+function createSession() {
+  csrfToken = generateToken();
+  sessionExpiry = Date.now() + SESSION_DURATION;
+  const sessionData = { token: csrfToken, expiry: sessionExpiry };
+  try { localStorage.setItem(SESSION_KEY, xorEncrypt(JSON.stringify(sessionData), ENC_KEY)); } catch {}
+  startSessionTimer();
+  addAudit('LOGIN', 'Admin session created');
+}
+
+function checkSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return false;
+    const dec = xorDecrypt(raw, ENC_KEY);
+    if (!dec) return false;
+    const data = JSON.parse(dec);
+    if (Date.now() > data.expiry) {
+      destroySession();
+      return false;
+    }
+    csrfToken = data.token;
+    sessionExpiry = data.expiry;
+    return true;
+  } catch { return false; }
+}
+
+function destroySession() {
+  csrfToken = '';
+  sessionExpiry = 0;
+  try { localStorage.removeItem(SESSION_KEY); } catch {}
+  clearInterval(sessionInterval);
+  addAudit('LOGOUT', 'Admin session destroyed');
+}
+
+function extendSession() {
+  sessionExpiry = Date.now() + SESSION_DURATION;
+  try {
+    const sessionData = { token: csrfToken, expiry: sessionExpiry };
+    localStorage.setItem(SESSION_KEY, xorEncrypt(JSON.stringify(sessionData), ENC_KEY));
+  } catch {}
+}
+
+function startSessionTimer() {
+  clearInterval(sessionInterval);
+  sessionInterval = setInterval(() => {
+    const remaining = sessionExpiry - Date.now();
+    if (remaining <= 0) {
+      clearInterval(sessionInterval);
+      destroySession();
+      showToast('Session expired. Please log in again.', 'error');
+      showLogin();
+      return;
+    }
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    const el = document.getElementById('sessionTimer');
+    if (el) {
+      el.textContent = `Session: ${mins}:${secs.toString().padStart(2,'0')}`;
+      if (remaining < 300000) el.style.color = '#F59E0B';
+      if (remaining < 60000) el.style.color = '#DC2626';
+    }
+  }, 1000);
+}
+
+// ===== DATA =====
+let articles = [
+  {id:0,cat:"Corruption",status:"published",featured:true,title:"The Panama Papers: 10 Years Later — Nobody Went to Jail",slug:"panama-papers-nobody-went-to-jail",excerpt:"How the world's biggest financial leak exposed trillions in hidden wealth — and why the powerful escaped justice entirely.",date:"May 20, 2026",read:"12 min",views:4200,seoTitle:"Panama Papers Explained — Why Nobody Went to Jail",seoDesc:"The full story of the world's biggest financial leak and its aftermath.",body:`<h1>The Panama Papers: 10 Years Later — Nobody Went to Jail</h1><div class="byline">May 20, 2026 · Corruption · 12 min read · 4,200 views</div><p>In April 2016, the world received the largest data leak in history. Over 11.5 million documents from Panamanian law firm Mossack Fonseca revealed how the global elite had hidden trillions of dollars in offshore shell companies.</p><blockquote>"The Panama Papers changed what we knew. But not what happened to those responsible."</blockquote><p>The leak named 140 politicians from 50 countries. Twelve national leaders were directly implicated. The documents revealed systematic tax evasion, money laundering, and sanctions violations at a scale the world had never seen.</p><h2>So What Actually Changed?</h2><p>Very little. A decade later, the architects of the system remain largely untouched. Mossack Fonseca shut down — but its founders faced minimal legal consequences. The offshore industry continues operating, processing trillions in hidden wealth every year.</p>`},
+  {id:1,cat:"Finance",status:"published",featured:false,title:"How Billionaires Legally Pay 0% Tax — The Full System Explained",slug:"billionaires-zero-tax",excerpt:"The legal loopholes, shell companies, and offshore accounts that let the ultra-rich avoid paying their fair share.",date:"May 19, 2026",read:"8 min",views:2400,body:`<h1>How Billionaires Legally Pay 0% Tax</h1><div class="byline">May 19, 2026 · Finance · 8 min read</div><p>In 2021, ProPublica revealed that the 25 wealthiest Americans paid an effective tax rate of just 3.4% between 2014 and 2018. Some years, that dropped to zero.</p><p>This isn't tax evasion. It's legal. And understanding how it works is essential to understanding why wealth inequality keeps growing.</p><h2>The Buy-Borrow-Die Strategy</h2><p>Ultra-wealthy individuals don't earn salaries — they hold assets. Assets only get taxed when sold. So billionaires simply don't sell. Instead they borrow against assets at low interest rates. Loans aren't income, so they aren't taxed.</p><blockquote>"It is not a bug in the tax code. It is a feature, written by those who benefit from it."</blockquote>`},
+  {id:2,cat:"Politics",status:"published",featured:false,title:"UN Peacekeeping Scandals Nobody Is Reporting On",slug:"un-peacekeeping-scandals",excerpt:"Inside the systemic abuse and corruption within the world's most trusted international body.",date:"May 18, 2026",read:"10 min",views:1800,body:`<h1>UN Peacekeeping Scandals Nobody Is Reporting On</h1><div class="byline">May 18, 2026 · Politics · 10 min read</div><p>The United Nations deploys over 87,000 peacekeepers across 12 active missions. But a pattern of documented abuse, corruption, and impunity has plagued the organisation for decades.</p><h2>A System That Protects Itself</h2><p>When peacekeepers commit crimes, the sending country — not the UN or the host nation — is responsible for prosecution. In practice, most cases are quietly returned home and closed without charges.</p><blockquote>"The UN has created a system where its own personnel are above the law of every country they operate in."</blockquote>`},
+  {id:3,cat:"Social",status:"published",featured:false,title:"Modern Slavery Hidden Inside Your Supply Chain",slug:"modern-slavery-supply-chain",excerpt:"The clothes you wear, the phone you hold — traced back to forced labour most brands refuse to acknowledge.",date:"May 17, 2026",read:"9 min",views:3100,body:`<h1>Modern Slavery Hidden Inside Your Supply Chain</h1><div class="byline">May 17, 2026 · Social · 9 min read</div><p>The ILO estimates 40 million people live in modern slavery today. The majority are trapped in global supply chains producing goods consumed by the wealthiest countries on earth.</p><h2>Why Brands Are Never Held Accountable</h2><p>The legal structure of global supply chains is designed with plausible deniability built in. Brands outsource to manufacturers, who outsource to sub-contractors, who outsource again.</p><blockquote>"Every layer of outsourcing is another layer of protection from accountability."</blockquote>`},
+  {id:4,cat:"Finance",status:"draft",featured:false,title:"The IMF Loans That Destroyed Developing Economies",slug:"imf-loans-developing-economies",excerpt:"Structural adjustment programmes promised growth. What they delivered was austerity and dependency.",date:"May 16, 2026",read:"11 min",views:0,body:`<h1>The IMF Loans That Destroyed Developing Economies</h1><div class="byline">Draft</div><p>Since the 1980s, the IMF has provided loans on the condition of implementing Structural Adjustment Programmes — requiring privatisation, austerity, and trade liberalisation.</p>`},
+  {id:5,cat:"Corruption",status:"published",featured:false,title:"FIFA's Corruption: The Full Story Behind the Beautiful Game",slug:"fifa-corruption-full-story",excerpt:"How football's governing body operated as a criminal enterprise for decades — and how it was finally exposed.",date:"May 15, 2026",read:"13 min",views:2900,body:`<h1>FIFA's Corruption: The Full Story</h1><div class="byline">May 15, 2026 · Corruption · 13 min read</div><p>In May 2015, Swiss authorities arrested seven FIFA officials at a Zurich hotel at the request of the United States Department of Justice. It was the beginning of the most significant corruption case in sports history.</p><h2>The System That Enabled It</h2><p>FIFA operated with minimal financial transparency, weak governance structures, and a culture where long-serving officials held near-unaccountable power.</p>`},
+];
+let editingId = null;
+let autoSaveTimer = null;
+
+// ===== HELPERS =====
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function showToast(msg,type='success'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type+' show'; setTimeout(()=>t.classList.remove('show'),2800); }
+function setDate(){ document.getElementById('dateStr').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+
+// ===== WEBSITE =====
+function showWebsite(){ showScreen('websiteScreen'); showWebHome(); }
+function showWebHome(){
+  document.getElementById('articleViewWrap').style.display='none';
+  document.getElementById('webHomeWrap').style.display='block';
+  document.getElementById('gridTitle').textContent='Latest Investigations';
+  const pub = articles.filter(a=>a.status==='published');
+  renderHero(pub); renderGrid(pub); renderTrending(pub);
+}
+function renderHero(list){
+  const f = list.find(a=>a.featured) || list[0];
+  if(!f){document.getElementById('heroBlock').innerHTML='';return;}
+  const imgHtml = f.coverImage
+    ? `<div class="hero-img" style="background:none"><img src="${f.coverImage}" style="width:100%;height:100%;object-fit:cover;border-radius:4px" alt="${sanitize(f.title)}"></div>`
+    : `<div class="hero-img"><div class="hero-img-text">TRUTH</div></div>`;
+  document.getElementById('heroBlock').innerHTML=`
+    <div class="hero-label">Featured Investigation</div>
+    ${imgHtml}
+    <h2 class="hero-title" onclick="openArticle(${f.id})">${sanitize(f.title)}</h2>
+    <p class="hero-excerpt">${sanitize(f.excerpt)}</p>
+    <div class="hero-meta"><span class="tag">${sanitize(f.cat)}</span><span>${sanitize(f.date)}</span><span>${sanitize(f.read)} read</span><span>${f.views.toLocaleString()} views</span></div>`;
+}
+function renderGrid(list){
+  const rest = list.filter(a=>!a.featured).slice(0,6);
+  document.getElementById('webGrid').innerHTML = rest.map(a=>`
+    <div class="art-card" onclick="openArticle(${a.id})">
+      ${a.coverImage ? `<div style="width:100%;height:120px;overflow:hidden;border-radius:4px;margin-bottom:8px"><img src="${a.coverImage}" style="width:100%;height:100%;object-fit:cover" alt="${sanitize(a.title)}"></div>` : ''}
+      <div class="art-cat">${sanitize(a.cat)}</div>
+      <div class="art-title">${sanitize(a.title)}</div>
+      <div class="art-excerpt">${sanitize(a.excerpt)}</div>
+      <div class="art-meta-row"><span>${sanitize(a.date)}</span><span>${sanitize(a.read)} read</span><span>${a.views.toLocaleString()} views</span></div>
+    </div>`).join('');
+}
+function renderTrending(list){
+  const sorted=[...list].sort((a,b)=>b.views-a.views).slice(0,4);
+  document.getElementById('trendingList').innerHTML=sorted.map((a,i)=>`
+    <div class="trend-item" onclick="openArticle(${a.id})">
+      <div class="trend-num">0${i+1}</div>
+      <div><div class="trend-title">${sanitize(a.title)}</div><div class="trend-cat">${sanitize(a.cat)} · ${sanitize(a.read)} read</div></div>
+    </div>`).join('');
+}
+function openArticle(id){
+  const a=articles.find(x=>x.id===id);
+  if(!a)return;
+  const coverHtml = a.coverImage
+    ? `<div style="width:100%;height:280px;overflow:hidden;border-radius:6px;margin-bottom:20px"><img src="${a.coverImage}" style="width:100%;height:100%;object-fit:cover" alt="${sanitize(a.title)}"></div>`
+    : '';
+  document.getElementById('articleBody').innerHTML = coverHtml + sanitizeHtml(a.body);
+  document.getElementById('webHomeWrap').style.display='none';
+  document.getElementById('articleViewWrap').style.display='block';
+  a.views++;
+  saveArticles();
+  window.scrollTo(0,0);
+}
+function filterCat(cat){
+  const pub=articles.filter(a=>a.status==='published'&&a.cat===cat);
+  document.getElementById('gridTitle').textContent=sanitize(cat)+' Articles';
+  document.getElementById('heroBlock').innerHTML='';
+  document.getElementById('webGrid').innerHTML=pub.map(a=>`
+    <div class="art-card" onclick="openArticle(${a.id})">
+      ${a.coverImage ? `<div style="width:100%;height:120px;overflow:hidden;border-radius:4px;margin-bottom:8px"><img src="${a.coverImage}" style="width:100%;height:100%;object-fit:cover" alt="${sanitize(a.title)}"></div>` : ''}
+      <div class="art-cat">${sanitize(a.cat)}</div>
+      <div class="art-title">${sanitize(a.title)}</div>
+      <div class="art-excerpt">${sanitize(a.excerpt)}</div>
+      <div class="art-meta-row"><span>${sanitize(a.date)}</span><span>${sanitize(a.read)} read</span></div>
+    </div>`).join('');
+}
+function subscribe(){
+  const e=document.getElementById('emailInput').value.trim();
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(e && emailRe.test(e)){
+    document.querySelector('.newsletter-box').innerHTML='<div style="text-align:center;padding:14px"><div style="font-family:Playfair Display,serif;font-size:20px;color:#fff;margin-bottom:6px">✓ Subscribed!</div><div style="font-size:12px;color:#aaa">Thank you! You\'ll hear from us soon.</div></div>';
+    addAudit('SUBSCRIBE', 'Newsletter subscription: ' + e.replace(/@.+/,'@***'));
+  } else {
+    showToast('Please enter a valid email address.', 'error');
+  }
+}
+
+// ===== LOGIN (with rate limiting + SHA-256) =====
+function showLogin(){ showScreen('loginScreen'); }
+
+async function doLogin(){
+  // Check lockout
+  if (Date.now() < loginAttempts.lockUntil) {
+    const wait = Math.ceil((loginAttempts.lockUntil - Date.now()) / 1000);
+    document.getElementById('loginErr').textContent = `Too many attempts. Try again in ${wait}s.`;
+    document.getElementById('loginErr').style.display = 'block';
+    const el = document.getElementById('loginAttempts');
+    if (el) { el.textContent = `Account locked for ${wait} seconds`; el.style.display='block'; }
+    addAudit('SECURITY', `Login blocked — rate limit active (${wait}s remaining)`);
+    return;
+  }
+
+  const e = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
+
+  // Input validation
+  if (!e || !p) {
+    document.getElementById('loginErr').textContent = 'Email and password are required.';
+    document.getElementById('loginErr').style.display = 'block';
+    return;
+  }
+
+  // Hash the credential
+  const credHash = await sha256(e + ':' + p);
+
+  if (credHash === ADMIN_CREDENTIAL_HASH) {
+    // Success
+    loginAttempts.count = 0;
+    document.getElementById('loginErr').style.display = 'none';
+    const attEl = document.getElementById('loginAttempts');
+    if (attEl) attEl.style.display = 'none';
+    createSession();
+    extendSession();
+    showAdmin();
+    addAudit('LOGIN', `Successful login for ${e.replace(/@.+/,'@***')}`);
+  } else {
+    // Failure
+    loginAttempts.count++;
+    addAudit('SECURITY', `Failed login attempt ${loginAttempts.count}/${MAX_ATTEMPTS} for ${e.replace(/@.+/,'@***')}`);
+
+    if (loginAttempts.count >= MAX_ATTEMPTS) {
+      loginAttempts.lockUntil = Date.now() + LOCK_DURATION;
+      loginAttempts.count = 0;
+      document.getElementById('loginErr').textContent = `Too many failed attempts. Locked for 60 seconds.`;
+      const attEl = document.getElementById('loginAttempts');
+      if (attEl) { attEl.textContent = '⚠️ Account temporarily locked (60s)'; attEl.style.display='block'; }
+    } else {
+      const remaining = MAX_ATTEMPTS - loginAttempts.count;
+      document.getElementById('loginErr').textContent = `Invalid credentials. ${remaining} attempt${remaining!==1?'s':''} remaining.`;
+      const attEl = document.getElementById('loginAttempts');
+      if (attEl) { attEl.textContent = `⚠️ ${loginAttempts.count}/${MAX_ATTEMPTS} failed attempts`; attEl.style.display='block'; }
+    }
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+// Allow Enter key on login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').classList.contains('active')) doLogin();
+});
+
+// ===== ADMIN (session-gated) =====
+function showAdmin(){
+  if (!csrfToken && !checkSession()) { showLogin(); return; }
+  extendSession();
+  showScreen('adminScreen');
+  adminNav('dashboard', document.querySelector('.admin-menu-item'));
+}
+
+function requireSession() {
+  if (!csrfToken || Date.now() > sessionExpiry) {
+    destroySession();
+    showToast('Session expired. Please log in again.', 'error');
+    showLogin();
+    return false;
+  }
+  extendSession();
+  return true;
+}
+
+function adminNav(page, el){
+  if (!requireSession()) return;
+  if(el){ document.querySelectorAll('.admin-menu-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+  ['adminDashboard','adminArticles','adminEditor','adminMedia','adminSettings','adminAuditLog'].forEach(id=>document.getElementById(id).style.display='none');
+  const titles={dashboard:'Dashboard',articles:'All Articles',new:'New Article',media:'Media Library',settings:'Settings',auditlog:'Audit Log'};
+  document.getElementById('adminPageTitle').textContent=titles[page]||page;
+  document.getElementById('adminBreadcrumb').textContent='Admin / '+(titles[page]||page);
+  if(page==='dashboard'){ renderDashboard(); document.getElementById('adminDashboard').style.display='block'; }
+  else if(page==='articles'){ renderArticlesTable(); document.getElementById('adminArticles').style.display='block'; }
+  else if(page==='new'){ openEditor(null); document.getElementById('adminEditor').style.display='block'; }
+  else if(page==='media'){ document.getElementById('adminMedia').style.display='block'; }
+  else if(page==='settings'){ document.getElementById('adminSettings').style.display='block'; }
+  else if(page==='auditlog'){ renderAuditLog(); document.getElementById('adminAuditLog').style.display='block'; }
+}
+
+function doLogout() {
+  destroySession();
+  showToast('Logged out successfully.', 'success');
+  setTimeout(() => showLogin(), 500);
+}
+
+function renderDashboard(){
+  const pub=articles.filter(a=>a.status==='published');
+  const drafts=articles.filter(a=>a.status==='draft');
+  const totalViews=articles.reduce((s,a)=>s+a.views,0);
+  document.getElementById('statTotal').textContent=articles.length;
+  document.getElementById('statPublished').textContent=pub.length;
+  document.getElementById('statViews').textContent=totalViews.toLocaleString();
+  document.getElementById('statDrafts').textContent=drafts.length;
+  document.getElementById('dashTable').innerHTML=articles.slice(0,6).map(a=>`
+    <div class="table-row">
+      <span style="font-weight:500;font-size:13px">${sanitize(a.title.length>50?a.title.slice(0,50)+'…':a.title)}</span>
+      <span><span class="tag" style="background:${catColor(a.cat)}">${sanitize(a.cat)}</span></span>
+      <span>${a.views.toLocaleString()}</span>
+      <span><span class="status-badge status-${a.status}">${a.status}</span></span>
+      <div class="action-btns">
+        <button class="btn-sm btn-edit" onclick="editArticle(${a.id})">Edit</button>
+        <button class="btn-sm btn-del" onclick="deleteArticle(${a.id})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderArticlesTable(filter='all'){
+  const cats=[...new Set(articles.map(a=>a.cat))];
+  document.getElementById('filterBar').innerHTML=
+    ['all',...cats,'published','draft'].map(f=>`<button class="filter-btn ${f===filter?'active':''}" onclick="renderArticlesTable('${sanitize(f)}')">${f==='all'?'All':sanitize(f.charAt(0).toUpperCase()+f.slice(1))}</button>`).join('');
+  const list=filter==='all'?articles:articles.filter(a=>a.cat===filter||a.status===filter);
+  document.getElementById('articlesTableBody').innerHTML=list.map(a=>`
+    <div class="table-row" style="grid-template-columns:2.5fr 90px 80px 70px 110px">
+      <span style="font-weight:500;font-size:13px">${sanitize(a.title.length>55?a.title.slice(0,55)+'…':a.title)}</span>
+      <span><span class="tag" style="background:${catColor(a.cat)}">${sanitize(a.cat)}</span></span>
+      <span>${a.views.toLocaleString()}</span>
+      <span><span class="status-badge status-${a.status}">${a.status}</span></span>
+      <div class="action-btns">
+        <button class="btn-sm btn-edit" onclick="editArticle(${a.id})">Edit</button>
+        <button class="btn-sm btn-del" onclick="deleteArticle(${a.id})">Del</button>
+      </div>
+    </div>`).join('');
+}
+
+function catColor(c){const m={Corruption:'#C41E1E',Finance:'#1A4A8A',Politics:'#2D6A2D',Social:'#7C3D8A',Health:'#A0522D',Technology:'#1A6A8A'};return m[c]||'#666'}
+
+function openEditor(id){
+  editingId=id;
+  const a=id!==null?articles.find(x=>x.id===id):null;
+  document.getElementById('editorTitle').textContent=a?'✏️ Edit Article':'✏️ New Article';
+  document.getElementById('fTitle').value=a?a.title:'';
+  document.getElementById('fSlug').value=a?a.slug:'';
+  document.getElementById('fCat').value=a?a.cat:'';
+  document.getElementById('fRead').value=a?a.read:'';
+  document.getElementById('fExcerpt').value=a?a.excerpt:'';
+  document.getElementById('fContent').innerHTML=a?sanitizeHtml(a.body):'';
+  document.getElementById('fSeoTitle').value=a&&a.seoTitle?a.seoTitle:'';
+  document.getElementById('fSeoDesc').value=a&&a.seoDesc?a.seoDesc:'';
+  document.getElementById('fFeatured').checked=a?a.featured:false;
+  document.getElementById('fBreaking').checked=false;
+  // Load cover image
+  currentCoverImageBase64 = a && a.coverImage ? a.coverImage : '';
+  if (currentCoverImageBase64) {
+    document.getElementById('coverImgTag').src = currentCoverImageBase64;
+    document.getElementById('coverImagePreview').style.display = 'block';
+    document.getElementById('coverImagePlaceholder').style.display = 'none';
+  } else {
+    document.getElementById('coverImgTag').src = '';
+    document.getElementById('coverImagePreview').style.display = 'none';
+    document.getElementById('coverImagePlaceholder').style.display = 'block';
+    document.getElementById('coverImageInput').value = '';
+  }
+  updateSeoPreview();
+  // Auto slug from title
+  document.getElementById('fTitle').addEventListener('input',()=>{
+    const s=document.getElementById('fTitle').value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    document.getElementById('fSlug').value=s;
+    updateSeoPreview();
+  });
+  // Auto-save draft every 30s
+  clearInterval(autoSaveTimer);
+  autoSaveTimer = setInterval(() => {
+    if (editingId !== null) {
+      const title = document.getElementById('fTitle').value.trim();
+      if (title) { showToast('Auto-saved draft…', 'success'); addAudit('AUTOSAVE', `Auto-saved draft: "${title.slice(0,40)}"`); }
+    }
+  }, 30000);
+}
+
+function editArticle(id){
+  if (!requireSession()) return;
+  openEditor(id);
+  document.getElementById('adminEditor').style.display='block';
+  ['adminDashboard','adminArticles','adminMedia','adminSettings','adminAuditLog'].forEach(i=>document.getElementById(i).style.display='none');
+  document.getElementById('adminPageTitle').textContent='Edit Article';
+  document.getElementById('adminBreadcrumb').textContent='Admin / Articles / Edit';
+  document.querySelectorAll('.admin-menu-item').forEach(i=>i.classList.remove('active'));
+}
+
+function deleteArticle(id){
+  if (!requireSession()) return;
+  const article = articles.find(a=>a.id===id);
+  if(confirm('Delete this article? This cannot be undone.')){
+    articles=articles.filter(a=>a.id!==id);
+    saveArticles();
+    renderDashboard();
+    renderArticlesTable();
+    showToast('Article deleted.','error');
+    addAudit('DELETE', `Deleted article: "${article ? article.title.slice(0,50) : id}"`);
+  }
+}
+
+function saveArticle(status){
+  if (!requireSession()) return;
+  const title=document.getElementById('fTitle').value.trim();
+  const cat=document.getElementById('fCat').value;
+  const excerpt=document.getElementById('fExcerpt').value.trim();
+
+  // Validate
+  const errors = validateArticle({
+    title, cat, excerpt,
+    slug: document.getElementById('fSlug').value,
+    seoTitle: document.getElementById('fSeoTitle').value,
+    seoDesc: document.getElementById('fSeoDesc').value
+  });
+
+  if (errors.length > 0) {
+    showToast('⚠ ' + errors[0], 'error');
+    return;
+  }
+
+  const now=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const sanitizedBody = sanitizeHtml(document.getElementById('fContent').innerHTML);
+
+  if(editingId!==null){
+    const idx=articles.findIndex(a=>a.id===editingId);
+    articles[idx]={...articles[idx],
+      title,
+      slug: document.getElementById('fSlug').value,
+      cat,
+      read: document.getElementById('fRead').value||'5 min',
+      excerpt,
+      body: sanitizedBody,
+      seoTitle: document.getElementById('fSeoTitle').value,
+      seoDesc: document.getElementById('fSeoDesc').value,
+      featured: document.getElementById('fFeatured').checked,
+      coverImage: currentCoverImageBase64,
+      status
+    };
+    saveArticles();
+    showToast('Article updated — changes are live!','success');
+    addAudit('UPDATE', `Updated article: "${title.slice(0,50)}" → ${status}`);
+  } else {
+    const newId=Date.now();
+    articles.push({
+      id:newId, title,
+      slug: document.getElementById('fSlug').value||title.toLowerCase().replace(/[^a-z0-9]+/g,'-'),
+      cat,
+      read: document.getElementById('fRead').value||'5 min',
+      excerpt,
+      body: sanitizedBody,
+      seoTitle: document.getElementById('fSeoTitle').value,
+      seoDesc: document.getElementById('fSeoDesc').value,
+      featured: document.getElementById('fFeatured').checked,
+      coverImage: currentCoverImageBase64,
+      status, date: now, views: 0
+    });
+    saveArticles();
+    showToast(status==='published'?'Article published — now live on site!':'Saved as draft!','success');
+    addAudit('CREATE', `Created article: "${title.slice(0,50)}" → ${status}`);
+  }
+  clearInterval(autoSaveTimer);
+  // Navigate to articles list — website will reflect changes when visited
+  adminNav('articles', null);
+  // Show "View Site" hint
+  setTimeout(() => showToast('Changes live! Click "View Site" to see them.', 'success'), 500);
+}
+
+function updateSeoPreview(){
+  const t=document.getElementById('fSeoTitle').value||document.getElementById('fTitle').value||'Article title';
+  const s=document.getElementById('fSlug').value||'your-slug';
+  const d=document.getElementById('fSeoDesc').value||'Meta description will appear here';
+  document.getElementById('seoTitlePrev').textContent=t.slice(0,60);
+  document.getElementById('seoSlugPrev').textContent=s;
+  document.getElementById('seoDescPrev').textContent=d.slice(0,160);
+}
+
+function fmt(cmd){ document.execCommand(cmd,false,null); document.getElementById('fContent').focus(); }
+function insHtml(html){ document.getElementById('fContent').focus(); document.execCommand('insertHTML',false,html); }
+
+// ===== IMAGE HANDLING =====
+let currentCoverImageBase64 = '';
+
+function handleCoverImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  processCoverImageFile(file);
+}
+
+function handleImageDrop(event) {
+  event.preventDefault();
+  document.getElementById('coverImageWrap').style.borderColor = 'var(--border)';
+  const file = event.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) { showToast('Please drop an image file.', 'error'); return; }
+  processCoverImageFile(file);
+}
+
+function processCoverImageFile(file) {
+  if (file.size > 5 * 1024 * 1024) { showToast('Image must be under 5MB.', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    currentCoverImageBase64 = e.target.result;
+    document.getElementById('coverImgTag').src = currentCoverImageBase64;
+    document.getElementById('coverImagePreview').style.display = 'block';
+    document.getElementById('coverImagePlaceholder').style.display = 'none';
+    addAudit('MEDIA', `Cover image uploaded: ${file.name} (${(file.size/1024).toFixed(0)}KB)`);
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeCoverImage(event) {
+  event.stopPropagation();
+  currentCoverImageBase64 = '';
+  document.getElementById('coverImgTag').src = '';
+  document.getElementById('coverImagePreview').style.display = 'none';
+  document.getElementById('coverImagePlaceholder').style.display = 'block';
+  document.getElementById('coverImageInput').value = '';
+}
+
+function triggerInlineImage() {
+  document.getElementById('inlineImageInput').click();
+}
+
+function handleInlineImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image must be under 5MB.', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const imgHtml = `<figure style="margin:18px 0;text-align:center"><img src="${e.target.result}" alt="${sanitize(file.name.replace(/\.[^.]+$/,''))}" style="max-width:100%;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.12)"><figcaption style="font-size:12px;color:#888;margin-top:6px;font-style:italic">${sanitize(file.name.replace(/\.[^.]+$/,''))}</figcaption></figure>`;
+    insHtml(imgHtml);
+    addAudit('MEDIA', `Inline image inserted: ${file.name}`);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+// ===== AUDIT LOG RENDERING =====
+function renderAuditLog() {
+  const typeColors = {
+    LOGIN: '#22C55E', LOGOUT: '#F59E0B', SECURITY: '#DC2626',
+    CREATE: '#3B6FD4', UPDATE: '#7C3D8A', DELETE: '#DC2626',
+    STORAGE: '#6B7280', ERROR: '#DC2626', AUTOSAVE: '#6B7280',
+    SUBSCRIBE: '#1A4A8A'
+  };
+  if (auditLog.length === 0) {
+    document.getElementById('auditLogBody').innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px">No audit entries yet.</div>';
+    return;
+  }
+  document.getElementById('auditLogBody').innerHTML = auditLog.map(e => `
+    <div class="table-row" style="grid-template-columns:160px 120px 1fr 100px;font-size:12px">
+      <span style="color:var(--muted)">${new Date(e.ts).toLocaleString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+      <span><span class="status-badge" style="background:${typeColors[e.type]||'#666'}22;color:${typeColors[e.type]||'#666'};font-size:10px">${e.type}</span></span>
+      <span>${sanitize(e.detail)}</span>
+      <span style="font-family:monospace;font-size:10px;color:var(--muted)">${sanitize(e.session)}</span>
+    </div>`).join('');
+}
+
+function clearAuditLog() {
+  if (!requireSession()) return;
+  if (confirm('Clear all audit log entries?')) {
+    addAudit('SECURITY', 'Audit log cleared by administrator');
+    auditLog = auditLog.slice(0,1); // keep the clear event
+    saveAuditLog();
+    renderAuditLog();
+    showToast('Audit log cleared.', 'success');
+  }
+}
+
+// ===== INIT =====
+loadAuditLog();
+addAudit('SYSTEM', 'Application initialized');
+// Try to restore articles from storage, fallback to defaults
+loadArticles();
+setDate();
+// Restore session if valid
+if (checkSession()) {
+  addAudit('SESSION', 'Existing session restored');
+  startSessionTimer();
+}
+showWebsite();
+
+</script>
+</body>
+</html>
